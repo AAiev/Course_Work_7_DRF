@@ -1,5 +1,10 @@
 # константы для моделей:
 
+
+# Максимальное время выполнения
+TIME_COMPLATE = 120
+
+
 NULLABLE = {'blank': True,
             'null': True}
 
