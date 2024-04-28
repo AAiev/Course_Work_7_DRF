@@ -2,6 +2,7 @@ from rest_framework.serializers import ValidationError
 
 from services.constants import TIME_COMPLATE
 
+
 class HabitValidator:
     """
     валидацция невозможности одновременного заполнения связанной привычки и вознаграждения
@@ -15,7 +16,6 @@ class HabitValidator:
         award = value.get('award')
         if related_habit and award:
             raise ValidationError("Запрещено выбирать односременно связанную привычку и вознаграждение")
-
 
 
 class TimeCompleteValidator:
@@ -37,13 +37,31 @@ class SignPleasantHabitAndRelatedHabitValidator:
     """
     Валидатор исключения попадания привычки в связанные привычки, если отсутствует признак приятной привычки
     """
-    def __init__(self, sign_pleasant_habit, related_habit):
-        self.sign_pleasant_habit = sign_pleasant_habit
+    def __init__(self, related_habit):
         self.related_habit = related_habit
 
     def __call__(self, value):
-        sign_pleasant_habit = value.get(self.sign_pleasant_habit)
         related_habit = value.get(self.related_habit)
         if related_habit:
             if not related_habit.sign_pleasant_habit:
-                raise ValidationError('В связанные привычки могут быть выбраны только привычки, которые имеют "ПРИЗНАК ПРИЯТНОЙ ПРИВЫЧКИ"')
+                raise ValidationError('В связанные привычки могут быть выбраны только привычки, '
+                                      'которые имеют "ПРИЗНАК ПРИЯТНОЙ ПРИВЫЧКИ"')
+
+
+class PleasantHabitValidator:
+    """ Валидатор проверки отсутсвия у привычки с ПРИЗНАКОМ ПРИЯТНОЙ ПРИВЫЧКИ
+        отсутсвия вознаграждения или связанной привычки
+    """
+
+    def __init__(self, sign_pleasant_habit, related_habit, award):
+        self.sign_pleasant_habit = sign_pleasant_habit
+        self.related_habit = related_habit
+        self.award = award
+
+    def __call__(self, value):
+        sign_pleasant_habit = dict(value).get(self.sign_pleasant_habit)
+        related_habit = dict(value).get(self.related_habit)
+        award = dict(value).get(self.award)
+        if sign_pleasant_habit and (related_habit is not None or award is not None):
+            raise (ValidationError
+                   ("У привычки с 'ПРИЗНАКОМ ПРИЯТНОЙ ПРИВЫЧКИ' не может быть вознаграждения или связанной привычки"))
