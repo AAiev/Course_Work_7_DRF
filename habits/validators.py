@@ -31,3 +31,19 @@ class TimeCompleteValidator:
         time_to_complete = value.get('time_to_complete')
         if time_to_complete > TIME_COMPLATE:
             raise ValidationError(f"Время выполнения привычки должно быть не больше {TIME_COMPLATE} секунд)")
+
+
+class SignPleasantHabitAndRelatedHabitValidator:
+    """
+    Валидатор исключения попадания привычки в связанные привычки, если отсутствует признак приятной привычки
+    """
+    def __init__(self, sign_pleasant_habit, related_habit):
+        self.sign_pleasant_habit = sign_pleasant_habit
+        self.related_habit = related_habit
+
+    def __call__(self, value):
+        sign_pleasant_habit = value.get(self.sign_pleasant_habit)
+        related_habit = value.get(self.related_habit)
+        if related_habit:
+            if not related_habit.sign_pleasant_habit:
+                raise ValidationError('В связанные привычки могут быть выбраны только привычки, которые имеют "ПРИЗНАК ПРИЯТНОЙ ПРИВЫЧКИ"')
