@@ -3,6 +3,7 @@ from django.db import models
 
 from services.constants import NULLABLE
 
+
 class User(AbstractUser):
     """
     Модель пользователя

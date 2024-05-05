@@ -13,9 +13,11 @@ class Habit(models.Model):
     time = models.DateTimeField(verbose_name='время выполнения')
     action = models.CharField(max_length=150, verbose_name='действие')
     sign_pleasant_habit = models.BooleanField(default=False, verbose_name='признак приятной привычки')
-    related_habit = models.ForeignKey(to='Habit', verbose_name='cвязанная привычка')
-    frequency = models.CharField(max_length=10, choices=FREQUENCY, default='7', verbose_name='периодичность выполенения')
-    award = models.CharField(max_length=100, verbose_name='награда')
+    related_habit = models.ForeignKey(to='Habit', verbose_name='cвязанная привычка',
+                                      on_delete=models.CASCADE, **NULLABLE)
+    frequency = models.CharField(max_length=10, choices=FREQUENCY, default='7',
+                                 verbose_name='периодичность выполенения')
+    award = models.CharField(max_length=100, verbose_name='награда', **NULLABLE)
     time_to_complete = models.IntegerField(verbose_name='время на выполнение')
     is_publicity = models.BooleanField(default=False, verbose_name='признак публичности')
 
