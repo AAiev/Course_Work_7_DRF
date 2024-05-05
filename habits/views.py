@@ -3,8 +3,9 @@ from rest_framework.generics import (CreateAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from habits.models import Habit
+from habits.paginators import HabitsListPaginations
 from habits.permissions import IsOwnerHabit
-from habits.serializers import HabitSerializer
+from habits.serializers import HabitSerializer, HabitPublicSerializer
 
 
 # Create your views here.
@@ -26,6 +27,7 @@ class HabitListAPIView(ListAPIView):
     serializer_class = HabitSerializer
     permission_classes = [IsOwnerHabit]
     queryset = Habit.objects.all()
+    pagination_class = HabitsListPaginations
 
 
 class HabitRetrieveAPIView(RetrieveAPIView):
@@ -46,3 +48,11 @@ class HabitDestroyAPIView(DestroyAPIView):
     """ Контроллер удаления привычки"""
     serializer_class = HabitSerializer
     permission_classes = [IsOwnerHabit]
+
+
+class HabitsPublicListAPIView(ListAPIView):
+    """ Контроллер просмотра списка публичных привычек"""
+    serializer_class = HabitPublicSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = HabitsListPaginations
+    queryset = Habit.objects.filter(is_public=True)

@@ -24,3 +24,14 @@ class HabitSerializer(serializers.ModelSerializer):
                                    related_habit='related_habit',
                                    award='award')
         ]
+
+
+class HabitPublicSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для публичных Привычек
+    """
+    class Meta:
+        model = Habit
+        fields = ('id', 'owner', 'place', 'time', 'action', 'sign_pleasant_habit', 'related_habit',
+                  'frequency', 'award', 'time_to_complete', 'is_publicity',)
+        read_only_fields = fields
