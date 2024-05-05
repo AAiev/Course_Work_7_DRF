@@ -172,3 +172,18 @@ CORS_ALLOW_ALL_ORIGINS = False
 # Telegram settings
 TELEGRAM_API_TOKEN = os.getenv('TELEGRAM_API_TOKEN')
 TELEGRAM_URL = os.getenv('TELEGRAM_URL')
+
+# Настройки для Celery
+CELERY_TIMEZONE = TIME_ZONE     # Часовой пояс для работы Celery
+CELERY_TASK_TRACK_STARTED = True        # Флаг отслеживания выполнения задач
+CELERY_TASK_TIME_LIMIT = 30 * 60        # Максимальное время на выполнение задачи
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")        # URL-адрес брокера сообщений
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")       # URL-адрес брокера результатов, также Redis
+
+# Настройки для Celery
+CELERY_BEAT_SCHEDULE = {
+    'task-name': {
+        'task': 'users.tasks.deactivation_user_after_few_days',  # Путь к задаче
+        'schedule': timedelta(minutes=1),  # Расписание выполнения задачи (например, каждые 10 минут)
+    },
+}
