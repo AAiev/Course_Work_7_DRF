@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class IsOwner(BasePermission):
+class IsOwnerHabit(BasePermission):
     """
     Кастомный пермишен для проверк, является ли пользователь владельцем запрашиваемых привычек
     """
