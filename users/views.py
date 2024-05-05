@@ -1,5 +1,4 @@
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
-
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
 
 from users.models import User
 from users.serializers import UserSerializer
@@ -13,7 +12,15 @@ class UserCreateAPIView(CreateAPIView):
     serializer_class = UserSerializer
 
 
+
 class UserRetrieveAPIView(RetrieveAPIView):
+    """
+    Контроллер для просмотора конкретной сущности модели Пользователя
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserListAPIView(ListAPIView):
     """
     Контроллер для просмотора конкретной сущности модели Пользователя
     """

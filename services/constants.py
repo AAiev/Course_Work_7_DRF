@@ -2,7 +2,7 @@
 
 
 # Максимальное время выполнения
-TIME_COMPLATE = 120
+TIME_COMPLATE: int = 120
 
 
 NULLABLE = {'blank': True,

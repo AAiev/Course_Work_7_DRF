@@ -29,7 +29,7 @@ class TimeCompleteValidator:
 
     def __call__(self, value):
         time_to_complete = value.get('time_to_complete')
-        if time_to_complete > TIME_COMPLATE:
+        if int(time_to_complete) > int(TIME_COMPLATE):
             raise ValidationError(f"Время выполнения привычки должно быть не больше {TIME_COMPLATE} секунд)")
 
 
