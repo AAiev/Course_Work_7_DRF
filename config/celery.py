@@ -13,5 +13,6 @@ app = Celery('config')
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# Загрузка модулей задач (из tasks.py) из всех зарегистрированных приложений Django.
+# Загрузка модулей задач (из tasks.py) из всех
+# зарегистрированных приложений Django.
 app.autodiscover_tasks()
