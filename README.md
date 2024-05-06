@@ -31,7 +31,7 @@
 
 **Документация API**
 
-* Документация API доступна после запуска сервера по адресу: http://localhost:8000/redoc/ или http://localhost:8000/swagger/
+* Документация API доступна после запуска сервера по адресу: `http://localhost:8000/redoc/` или `http://localhost:8000/swagger/`
 
 
 
