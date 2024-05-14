@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+
+  redis:
+    image: redis
+    restart: on-failure
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:latest
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    expose: # Вместо ports, чтобы исключить возможность попасть из вне
+      - "5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data/pgdata # из документации
+    healthcheck: # проверка postgres готов в работе или нет
+      test: ["CMD-SHELL", "-c", "pg_isready -U $POSpg_dbTGRES_USER"]
+      interval: 10s # Интервал опроса postgres
+      retries: 5 # количестов попыток опроса postgres
+      timeout: 5s # время одного опроса, после которого идет следущая попытка
+
+  app:
+    build: .
+    restart: on-failure
+    tty: true # вкл интерактивный режим
+    ports:
+      - "8000:8000"
+
+    # Команда для запуска (из Deckerfile необходимо удалить)
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on: # зависимости
+      db:
+        condition: service_healthy # состояние сервиса / сервис здоров
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+  celery:
+    build: .
+    tty: true
+    command: celery -A config worker -l INFO
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - app
+
+  celery-beat:
+    build: .
+    tty: true
+    command: celery -A config beat -l INFO -S django
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - app
+
+
+volumes: # необходим чтобы при перезапуске не терялись данные из бд
+  pg_data:
