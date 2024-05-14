@@ -21,7 +21,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data/pgdata # из документации
     healthcheck: # проверка postgres готов в работе или нет
-      test: ["CMD-SHELL", "-c", "pg_isready -U $POSpg_dbTGRES_USER"]
+      test: ["CMD-SHELL", "-c", "pg_isready -U $POSTGRES_USER"]
       interval: 10s # Интервал опроса postgres
       retries: 5 # количестов попыток опроса postgres
       timeout: 5s # время одного опроса, после которого идет следущая попытка
